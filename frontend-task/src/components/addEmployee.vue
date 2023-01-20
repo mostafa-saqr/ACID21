@@ -15,9 +15,11 @@
   <div class="mb-3">
     <label for="empolyeeName" class="form-label">Name</label>
     <input type="text" class="form-control" v-model="newEmployee.name" id="empolyeeName" aria-describedby="EmployeeNameHelp">
-    {{ newEmployee.name }}
+    
   </div>
   <div class="mb-3">
+    <label for="empolyeeName" class="form-label">Department</label>
+
     <select class="form-select" aria-label="Default select example" v-model="newEmployee.departmentId">
   <option selected value="0">select Department</option>
   <option v-for="department in (departments as DepartmentsDTO[])" :value="department.id">{{department.name}}</option>
@@ -45,7 +47,9 @@ export default defineComponent({
   props:['departments'],
   data(){
     return {
-     newEmployee:{} as EmployeeDTO
+     newEmployee:{
+      departmentId:0
+     } as EmployeeDTO
 
     }
   },
