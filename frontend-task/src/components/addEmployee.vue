@@ -14,11 +14,12 @@
         <form>
   <div class="mb-3">
     <label for="empolyeeName" class="form-label">Name</label>
-    <input type="text" class="form-control" id="empolyeeName" aria-describedby="EmployeeNameHelp">
+    <input type="text" class="form-control" v-model="newEmployee.name" id="empolyeeName" aria-describedby="EmployeeNameHelp">
+    {{ newEmployee.name }}
   </div>
   <div class="mb-3">
-    <select class="form-select" aria-label="Default select example">
-  <option selected>select Department</option>
+    <select class="form-select" aria-label="Default select example" v-model="newEmployee.departmentId">
+  <option selected value="0">select Department</option>
   <option v-for="department in (departments as DepartmentsDTO[])" :value="department.id">{{department.name}}</option>
 
 </select>
@@ -28,7 +29,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" @click="addEmployee()" data-bs-dismiss="modal">Save changes</button>
       </div>
     </div>
   </div>
@@ -46,6 +47,17 @@ export default defineComponent({
     return {
      newEmployee:{} as EmployeeDTO
 
+    }
+  },
+  methods:{
+    addEmployee(){
+      let newEmployee:EmployeeDTO = {
+        id:Math.random(),
+        name:this.newEmployee.name,
+        departmentId:this.newEmployee.departmentId
+      }
+      console.log(newEmployee)
+      this.$emit('newEmployee',newEmployee)
     }
   }
 });

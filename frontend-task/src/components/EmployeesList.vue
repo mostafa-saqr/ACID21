@@ -9,17 +9,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="employee, index in (employees as EmployeeDTO[]) " :key="employees.id">
+    <tr v-for="employee, index in (employees.slice(paginationValues.pageIndex*paginationValues.pageSize,paginationValues.pageIndex*paginationValues.pageSize + paginationValues.pageSize) as EmployeeDTO[]) " :key="employees.id">
       <th scope="row">{{index}}</th>
       <td>{{employee.name}}</td>
       <td>{{getDepartmentName(employee.departmentId)}}</td>
-      <td><button >Delete</button></td>
+      <td><button @click=deleteEmployeeById(employee.id)>Delete</button></td>
       
     </tr>
    
   </tbody>
 </table>
-<Pagination />
+<Pagination :paginationValues="paginationValues" @moveToPageNo="moveToPageNo"/>
 </template>
 
 <script lang="ts">
@@ -32,7 +32,11 @@ export default defineComponent({
   components: {Pagination},
   data(){
     return {
-     
+      paginationValues:{
+      pageSize:15,
+      pageIndex:0,
+      resultsLength:this.employees.length
+     }
 
     }
   },
@@ -40,6 +44,14 @@ export default defineComponent({
     getDepartmentName(departmentId:number){
         let selectedDepartment:DepartmentsDTO[] =  this.departments.filter((department:DepartmentsDTO)=> department.id == departmentId)
         return selectedDepartment[0].name
+    },
+    deleteEmployeeById(id:number){
+      this.$emit('deleteEmployee',id)
+      this.paginationValues.resultsLength = this.employees.length
+      
+    },
+    moveToPageNo(value:number){
+      this.paginationValues.pageIndex = value
     }
   }
 });

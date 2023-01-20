@@ -9,23 +9,23 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="department, index in (departments as DepartmentsDTO[]) " :key="department.id">
+    <tr v-for="department, index in (departments.slice(paginationValues.pageIndex*paginationValues.pageSize,paginationValues.pageIndex*paginationValues.pageSize + paginationValues.pageSize) as DepartmentsDTO[]) " :key="department.id">
       <th scope="row">{{index}}</th>
       <td>{{department.name}}</td>
-      <td><button >Delete</button></td>
+      <td><button @click="deleteDepartmentById(department.id)">Delete</button></td>
       
     </tr>
    
   </tbody>
 </table>
-<Pagination />
+<Pagination :paginationValues="paginationValues" @moveToPageNo="moveToPageNo"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
-import { DepartmentsDTO, EmployeeDTO } from '@/model/organization.model';
+import { DepartmentsDTO } from '@/model/organization.model';
 export default defineComponent({
   name:'DepartmentList',
   props:['departments'],
@@ -33,8 +33,20 @@ export default defineComponent({
   components: {Pagination},
   data(){
     return {
-     
+     paginationValues:{
+      pageSize:15,
+      pageIndex:0,
+      resultsLength:this.departments.length
+     }
 
+    }
+  },
+  methods:{
+    deleteDepartmentById(id:number){
+      this.$emit('deleteDepartment',id)
+    },
+    moveToPageNo(value:number){
+      this.paginationValues.pageIndex = value
     }
   }
 });

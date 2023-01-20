@@ -31,15 +31,15 @@
  
 </ul>
 <div class="tab-content" id="myTabContent">
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Create</button>
 
   <div class="tab-pane fade show active" id="departments-tab-pane" role="tabpanel" aria-labelledby="departments-tab" tabindex="0">
-    
-    <DepartmentList :departments="departments"/>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
+    <DepartmentList :departments="departments" @deleteDepartment="deleteDepartment"/>
   </div>
   <div class="tab-pane fade" id="employees-tab-pane" role="tabpanel" aria-labelledby="employees-tab" tabindex="0">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Add Employee</button>
 
-    <EmployeeList :employees="employees" :departments="departments"/>
+    <EmployeeList :employees="employees" :departments="departments" @deleteEmployee="deleteEmployee"/>
   </div>
   
 </div>
@@ -50,7 +50,8 @@
   </div>
   <div>
   
-    <AddEmployee :departments="departments"/>
+    <AddEmployee :departments="departments" @newEmployee="addNewEmployee"/>
+    <AddDepartment  @newDepartment="addNewDepartment"/>
 
 </div>
 </template>
@@ -62,19 +63,42 @@ import { DepartmentsDTO, EmployeeDTO } from './model/organization.model';
 import DepartmentList from '@/components/DepartmentsList.vue'
 import EmployeeList from '@/components/EmployeesList.vue'
 import AddEmployee from '@/components/addEmployee.vue'
+import AddDepartment from '@/components/addDepartment.vue'
 export default defineComponent({
   
   components: {
     DepartmentList,
     EmployeeList,
-    AddEmployee
+    AddEmployee,
+    AddDepartment
   },
   data(){
     return {
       departments : departmentsData as DepartmentsDTO[],
-      employees : employeesData as EmployeeDTO[],
-
+      employees : employeesData as EmployeeDTO[]
     }
-  }
+  },
+  methods:{
+    addNewEmployee(value:EmployeeDTO){
+      this.employees.push(value)
+    },
+    addNewDepartment(value:DepartmentsDTO){
+      this.departments.push(value)
+      
+    },
+    deleteEmployee(value:number){
+      this.employees = this.employees.filter((employee:EmployeeDTO)=> employee.id != value)
+    },
+    deleteDepartment(value:number){
+      let checkDepartmentHasEmployee = this.employees.filter((employee:EmployeeDTO)=> employee.departmentId == value)
+      if (checkDepartmentHasEmployee.length > 0) {
+        alert('you can not delete this department')
+      } else {
+        this.departments = this.departments.filter((department:DepartmentsDTO)=> department.id != value)
+      }
+    },
+  
+  },
+ 
 });
 </script>
