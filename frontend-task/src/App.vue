@@ -2,6 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
+ 
         <div class="accounting-app">
     <h1>ACID21</h1>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -33,11 +34,31 @@
 <div class="tab-content" id="myTabContent">
 
   <div class="tab-pane fade show active" id="departments-tab-pane" role="tabpanel" aria-labelledby="departments-tab" tabindex="0">
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
-    <DepartmentList :departments="departments" @deleteDepartment="deleteDepartment"/>
+<div class="row mt-3">
+      <div class="col-md-6">
+        <input type="text" v-model="departmentSearchKeyword" @input="departmentSearchByName()" placeholder="search on departments">
+
+      </div>
+      <div class="col-md-6 text-end">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDepartmentModal">Add Department</button>
+
+      </div>
+    </div>
+  <DepartmentList :departments="departments" @deleteDepartment="deleteDepartment"/>
   </div>
   <div class="tab-pane fade" id="employees-tab-pane" role="tabpanel" aria-labelledby="employees-tab" tabindex="0">
+    <div class="row mt-3">
+      <div class="col-md-6">
+    <input type="text" v-model="employeeSearchKeyword" @input="employeeSearchByName()" placeholder="search on employees">
+
+      </div>
+      <div class="col-md-6 text-end">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Add Employee</button>
+
+      </div>
+    </div>
+    
+    
 
     <EmployeeList :employees="employees" :departments="departments" @deleteEmployee="deleteEmployee"/>
   </div>
@@ -75,10 +96,29 @@ export default defineComponent({
   data(){
     return {
       departments : departmentsData as DepartmentsDTO[],
-      employees : employeesData as EmployeeDTO[]
+      employees : employeesData as EmployeeDTO[],
+      departmentSearchKeyword:'',
+      employeeSearchKeyword:'',
+
     }
   },
   methods:{
+    departmentSearchByName(){
+      if (this.departmentSearchKeyword.length > 0) {
+      this.departments = departmentsData.filter((item)=>  item.name.toLowerCase().includes(this.departmentSearchKeyword.toLowerCase()))
+      } else {
+        this.departments = departmentsData
+      }
+      
+    },
+    employeeSearchByName(){
+      if (this.employeeSearchKeyword.length > 0) {
+      this.employees = employeesData.filter((item)=>  item.name.toLowerCase().includes(this.employeeSearchKeyword.toLowerCase()))
+      } else {
+        this.employees = employeesData
+      }
+      
+    },
     addNewEmployee(value:EmployeeDTO){
       this.employees.push(value)
     },

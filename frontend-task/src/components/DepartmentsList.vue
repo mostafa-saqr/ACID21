@@ -34,7 +34,7 @@ export default defineComponent({
   data(){
     return {
      paginationValues:{
-      pageSize:15,
+      pageSize:8,
       pageIndex:0,
       resultsLength:this.departments.length
      }

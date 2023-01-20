@@ -1,4 +1,5 @@
 <template>
+   
 <table class="table table-striped">
   <thead>
     <tr>
@@ -33,7 +34,7 @@ export default defineComponent({
   data(){
     return {
       paginationValues:{
-      pageSize:15,
+      pageSize:6,
       pageIndex:0,
       resultsLength:this.employees.length
      }

@@ -20,7 +20,7 @@ let departmentsData  = [
     },
     {
       id:5,
-      name:'Business Development'
+      name:'Sales'
     },
   ] as DepartmentsDTO[];
 
