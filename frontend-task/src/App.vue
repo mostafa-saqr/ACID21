@@ -19,13 +19,13 @@
   </button>
   <ul class="dropdown-menu">
    
-    <li v-for="department in departments" :key="department.id">{{ department.name }}
+    <!-- <li v-for="department in departments" :key="department.id">{{ department.name }}
         <ul>
           <template v-for="employee in employees" :key="employee.id" >
             <li v-if="employee.departmentId == department.id">{{ employee.name }}</li>
           </template>
         </ul>
-      </li>
+      </li> -->
   </ul>
 </div>
   </li>
@@ -36,7 +36,6 @@
   <div class="tab-pane fade show active" id="departments-tab-pane" role="tabpanel" aria-labelledby="departments-tab" tabindex="0">
 <div class="row mt-3">
       <div class="col-md-6">
-        <input type="text" v-model="departmentSearchKeyword" @input="departmentSearchByName()" placeholder="search on departments">
 
       </div>
       <div class="col-md-6 text-end">
@@ -44,7 +43,7 @@
 
       </div>
     </div>
-  <DepartmentList :departments="departments" @deleteDepartment="deleteDepartment"/>
+  <DepartmentList :departments="departments" @depSearchWord="departmentSearchByName"  @deleteDepartment="deleteDepartment"/>
   </div>
   <div class="tab-pane fade" id="employees-tab-pane" role="tabpanel" aria-labelledby="employees-tab" tabindex="0">
     <div class="row mt-3">
@@ -97,15 +96,15 @@ export default defineComponent({
     return {
       departments : departmentsData as DepartmentsDTO[],
       employees : employeesData as EmployeeDTO[],
-      departmentSearchKeyword:'',
+      
       employeeSearchKeyword:'',
 
     }
   },
   methods:{
-    departmentSearchByName(){
-      if (this.departmentSearchKeyword.length > 0) {
-      this.departments = departmentsData.filter((item)=>  item.name.toLowerCase().includes(this.departmentSearchKeyword.toLowerCase()))
+    departmentSearchByName(departmentSearchKeyword:string){
+      if (departmentSearchKeyword.length > 0) {
+      this.departments = departmentsData.filter((item)=>  item.name.toLowerCase().includes(departmentSearchKeyword.toLowerCase()))
       } else {
         this.departments = departmentsData
       }
@@ -120,10 +119,11 @@ export default defineComponent({
       
     },
     addNewEmployee(value:EmployeeDTO){
+      
       this.employees.push(value)
     },
     addNewDepartment(value:DepartmentsDTO){
-      this.departments.push(value)
+      this.departments = [...this.departments,value]
       
     },
     deleteEmployee(value:number){

@@ -1,4 +1,5 @@
 <template>
+        <input type="text" v-model="departmentSearchKeyword" @input="departmentSearchByName()" placeholder="search on departments">
 
 <table class="table table-striped">
   <thead>
@@ -9,16 +10,21 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="department, index in (departments.slice(paginationValues.pageIndex*paginationValues.pageSize,paginationValues.pageIndex*paginationValues.pageSize + paginationValues.pageSize) as DepartmentsDTO[]) " :key="department.id">
+    <template v-for="department, index in (departments as DepartmentsDTO[]) " :key="department.id">
+      <tr v-if="index > (pageIndex*pageSize - 1) &&
+        index < (pageIndex*pageSize+pageSize) ">
       <th scope="row">{{index}}</th>
-      <td>{{department.name}}</td>
+      <td v-if="department.name">{{department.name}}</td>
       <td><button @click="deleteDepartmentById(department.id)">Delete</button></td>
       
     </tr>
+    </template>
+    
+   
    
   </tbody>
 </table>
-<Pagination :paginationValues="paginationValues" @moveToPageNo="moveToPageNo"/>
+<Pagination :pageIndex="pageIndex" :pageSize="pageSize" :results="departments"  @moveToPageNo="moveToPageNo"/>
 </template>
 
 <script lang="ts">
@@ -33,11 +39,11 @@ export default defineComponent({
   components: {Pagination},
   data(){
     return {
-     paginationValues:{
-      pageSize:8,
-      pageIndex:0,
-      resultsLength:this.departments.length
-     }
+   departmentSearchKeyword:'',
+      pageSize:3,
+      pageIndex:0
+     
+   
 
     }
   },
@@ -46,7 +52,16 @@ export default defineComponent({
       this.$emit('deleteDepartment',id)
     },
     moveToPageNo(value:number){
-      this.paginationValues.pageIndex = value
+      this.pageIndex = value
+      console.log(value)
+    },
+    departmentSearchByName(){
+      this.pageIndex = 0
+      this.$emit('depSearchWord',this.departmentSearchKeyword)
+    }
+  },
+  watch:{
+    getNewPagination(){
     }
   }
 });

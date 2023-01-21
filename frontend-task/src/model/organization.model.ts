@@ -5,5 +5,6 @@ export interface DepartmentsDTO {
 export interface EmployeeDTO {
     id:number;
     name:string;
-    departmentId:number
+    departmentId:number,
+    departmentName?:'string'
 }
