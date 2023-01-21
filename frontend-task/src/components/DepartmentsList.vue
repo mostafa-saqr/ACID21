@@ -24,6 +24,9 @@
    
   </tbody>
 </table>
+{{ counterStore.counter }}
+<button @click="counterStore.counter++">count++</button>
+<button @click="counterStore.counter--">count--</button>
 <Pagination :pageIndex="pageIndex" :pageSize="pageSize" :results="departments"  @moveToPageNo="moveToPageNo"/>
 </template>
 
@@ -32,6 +35,8 @@ import { defineComponent } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
 import { DepartmentsDTO } from '@/model/organization.model';
+import {counterStore} from '@/store/store'
+
 export default defineComponent({
   name:'DepartmentList',
   props:['departments'],
@@ -41,7 +46,8 @@ export default defineComponent({
     return {
    departmentSearchKeyword:'',
       pageSize:3,
-      pageIndex:0
+      pageIndex:0,
+      counterStore:counterStore()
      
    
 

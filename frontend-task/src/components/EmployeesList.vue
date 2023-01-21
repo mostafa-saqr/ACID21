@@ -1,4 +1,5 @@
 <template>
+    <input type="text" v-model="employeeSearchKeyword" @input="employeeSearchByName()" placeholder="search on employees">
    
 <table class="table table-striped">
   <thead>
@@ -40,7 +41,7 @@ export default defineComponent({
    
       pageSize:3,
       pageIndex:0,
-   
+      employeeSearchKeyword:'',
 
     }
   },
@@ -48,6 +49,10 @@ export default defineComponent({
     getDepartmentName(departmentId:number){
         let selectedDepartment:DepartmentsDTO[] =  this.departments.filter((department:DepartmentsDTO)=> department.id == departmentId)
         return selectedDepartment[0].name
+    },
+    employeeSearchByName(){
+      this.pageIndex=0
+      this.$emit('employeeSearchResult',this.employeeSearchKeyword)
     },
     deleteEmployeeById(id:number){
       this.$emit('deleteEmployee',id)

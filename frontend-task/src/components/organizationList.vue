@@ -1,19 +1,24 @@
 <template>
 <div class="accordion" id="accordionExample">
-  <template v-for="department in departments" :key="department.id">
-    <div class="accordion-item">
-    <h2 class="accordion-header" id="headingOne">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-        Accordion Item #1
+ <template v-for="department, index in departments" :key="department.id">
+  <div class="accordion-item" v-if="index > (pageIndex*pageSize - 1) &&
+        index < (pageIndex*pageSize+pageSize) " >
+    <h2 class="accordion-header" :id="'headingOne-'+department.id">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapseOne-'+department.id" :aria-expanded="index == 0?'true':'false'" :aria-controls="'collapseOne-'+department.id">
+        {{department.name}}
       </button>
     </h2>
-    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+    <div :id="'collapseOne-'+department.id" :class="'accordion-collapse collapse'+(index==0?' show':'')" :aria-labelledby="'headingOne-'+department.id" data-bs-parent="#accordionExample">
       <div class="accordion-body">
-        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+        <template v-for="employee in employees" :key="employee.id" >
+            <li v-if="employee.departmentId == department.id">{{ employee.name }}</li>
+          </template>
       </div>
     </div>
   </div>
-  </template>
+ </template>
+   
+  
  
 </div>
 <Pagination :pageIndex="pageIndex" :pageSize="pageSize" :results="departments"  @moveToPageNo="moveToPageNo"/>
@@ -26,7 +31,7 @@ import { defineComponent } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 import { DepartmentsDTO, EmployeeDTO } from '@/model/organization.model';
 export default defineComponent({
-  name:'EmployeeList',
+  name:'OrganizationTree',
   props:['employees','departments'],
   components: {Pagination},
   data(){
