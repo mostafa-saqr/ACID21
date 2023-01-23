@@ -55,7 +55,10 @@ export default defineComponent({
    
     getDepartmentName(departmentId:number){
         let selectedDepartment:DepartmentsDTO[] =  this.orgStore.departments.filter((department:DepartmentsDTO)=> department.id == departmentId)
-        return selectedDepartment[0].name
+        if(selectedDepartment.length > 0){
+         return selectedDepartment[0].name
+
+        }
     },
    
     employeeSearchByName(){
