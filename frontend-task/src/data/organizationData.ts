@@ -3,6 +3,10 @@ import { DepartmentsDTO, EmployeeDTO } from "@/model/organization.model"
 
 let departmentsData  = [
     {
+      id:0,
+      name:'Administration'
+    },
+    {
       id:1,
       name:'IT'
     },
