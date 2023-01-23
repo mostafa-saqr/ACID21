@@ -10,12 +10,12 @@
     </tr>
   </thead>
   <tbody>
-    <template v-for="department, index in (departments as DepartmentsDTO[]) " :key="department.id">
+    <template v-for="department, index in (currentDepartment as DepartmentsDTO[]) " :key="department.id">
       <tr v-if="index > (pageIndex*pageSize - 1) &&
         index < (pageIndex*pageSize+pageSize) ">
       <th scope="row">{{index}}</th>
       <td v-if="department.name">{{department.name}}</td>
-      <td><button @click="deleteDepartmentById(department.id)">Delete</button></td>
+      <td><button class="btn btn-danger" @click="deleteDepartmentById(department.id)">Delete</button></td>
       
     </tr>
     </template>
@@ -24,10 +24,8 @@
    
   </tbody>
 </table>
-{{ counterStore.counter }}
-<button @click="counterStore.counter++">count++</button>
-<button @click="counterStore.counter--">count--</button>
-<Pagination :pageIndex="pageIndex" :pageSize="pageSize" :results="departments"  @moveToPageNo="moveToPageNo"/>
+
+<Pagination :pageIndex="pageIndex" :pageSize="pageSize" :results="currentDepartment"  @moveToPageNo="moveToPageNo"/>
 </template>
 
 <script lang="ts">
@@ -35,7 +33,8 @@ import { defineComponent } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
 import { DepartmentsDTO } from '@/model/organization.model';
-import {counterStore} from '@/store/store'
+import { useOrganizationStore } from '@/store/store';
+
 
 export default defineComponent({
   name:'DepartmentList',
@@ -47,28 +46,40 @@ export default defineComponent({
    departmentSearchKeyword:'',
       pageSize:3,
       pageIndex:0,
-      counterStore:counterStore()
-     
+    orgStore:useOrganizationStore(),
+    currentDepartment :[] as DepartmentsDTO[]
    
 
     }
   },
   methods:{
+    getDepartments(){
+     this.currentDepartment = this.orgStore.getDepartments
+    },
     deleteDepartmentById(id:number){
-      this.$emit('deleteDepartment',id)
+      this.orgStore.deleteDepartment(id)
+      this.getDepartments()
+     let departmentsLen = this.currentDepartment.length
+      if(Math.ceil(departmentsLen / this.pageSize) == this.pageIndex && this.pageIndex > 0){
+        this.pageIndex--
+      }
     },
     moveToPageNo(value:number){
       this.pageIndex = value
-      console.log(value)
     },
+  
     departmentSearchByName(){
-      this.pageIndex = 0
-      this.$emit('depSearchWord',this.departmentSearchKeyword)
-    }
+            this.pageIndex = 0
+            if (this.departmentSearchKeyword.length > 0) {
+            this.currentDepartment = this.orgStore.departments.filter((item)=>  item.name.toLowerCase().includes(this.departmentSearchKeyword.toLowerCase()))
+            } else {
+              this.currentDepartment = this.orgStore.departments
+            }
+            
+          }
   },
-  watch:{
-    getNewPagination(){
-    }
+  mounted(){
+    this.getDepartments()
   }
 });
 </script>

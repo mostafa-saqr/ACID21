@@ -41,6 +41,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { DepartmentsDTO, EmployeeDTO } from '@/model/organization.model';
+import { useOrganizationStore } from '@/store/store';
 export default defineComponent({
   name:'AddEmployee',
   components: {},
@@ -49,7 +50,8 @@ export default defineComponent({
     return {
      newEmployee:{
       departmentId:0
-     } as EmployeeDTO
+     } as EmployeeDTO,
+     orgStore:useOrganizationStore()
 
     }
   },
@@ -60,8 +62,8 @@ export default defineComponent({
         name:this.newEmployee.name,
         departmentId:this.newEmployee.departmentId
       }
-      console.log(newEmployee)
-      this.$emit('newEmployee',newEmployee)
+      
+      this.orgStore.addEmployee(newEmployee)
     }
   }
 });

@@ -33,14 +33,15 @@
     <script lang="ts">
     import { defineComponent } from 'vue';
     import { DepartmentsDTO } from '@/model/organization.model';
+import { useOrganizationStore } from '@/store/store';
     export default defineComponent({
       name:'AddDepartment',
       components: {},
       props:['departments'],
       data(){
         return {
-         newDepartment:{} as DepartmentsDTO
-    
+         newDepartment:{} as DepartmentsDTO,
+         orgStore:useOrganizationStore()
         }
       },
       methods:{
@@ -49,8 +50,8 @@
             id:Math.random(),
             name:this.newDepartment.name,
           }
-          console.log(newDepartment)
-          this.$emit('newDepartment',newDepartment)
+         
+          this.orgStore.addDepartment(newDepartment)
         }
       }
     });
