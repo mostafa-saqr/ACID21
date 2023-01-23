@@ -70,6 +70,7 @@
       <li>user can add / delete department (on delete department should not have employee)</li>
       <li>user can add / delete employee</li>
       <li>user can search in departmens and employees</li>
+      <li>App tested for production</li>
       
     </ul>
   </div>
